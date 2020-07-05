@@ -11,4 +11,4 @@ def forms (s_input): # s is string
     for acc, key in data.items():
         keys += [key]
     keys.pop(-1)
-    return (keys)
+    return (list(set(keys)))
