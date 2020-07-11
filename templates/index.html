@@ -27,9 +27,9 @@
     </form>
 
     {% if toshow %}
-    {% for item in toshow %}
     <h4>{{name}}</h4>
     <h5 id="spheres">Предположительные сферы деятельности</h5>
+    {% for item in toshow %}
     <button type="button" class="btn btn-primary" disabled>{{item}} {{toshow[item]}}%</button>
     {% endfor %}
     {% endif %}
