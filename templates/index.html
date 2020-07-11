@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Профер</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+<br>
+<div class="container">
+    <h3 class="display-4">Профер</h3>
+    <p>by тых-тых гэнг</p>
+
+
+    <label for="basic-url">Введите адрес страницы пользователя ВК.</label>
+
+    <form action="" method="POST">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">https://vk.com/</span>
+      </div>
+      <input type="text" class="form-control" placeholder="durov" name="domain" id="domain">
+      <input class="btn btn-outline-secondary" type="submit" value="Вперед!">
+    </div>
+    </form>
+
+    {% if toshow %}
+    {% for item in toshow %}
+    <h4>{{name}}</h4>
+    <h5 id="spheres">Предположительные сферы деятельности</h5>
+    <button type="button" class="btn btn-primary" disabled>{{item}} {{toshow[item]}}%</button>
+    {% endfor %}
+    {% endif %}
+    <br>
+    <br>
+
+    <h4>Как это работает?</h4>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+    dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
+    anim id est laborum.</p>
+
+    <center><sub>Александр Великоиваненко, Николай Барковский</sub></center>
+
+</div>
+</body>
+
+</html>
