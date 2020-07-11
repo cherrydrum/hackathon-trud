@@ -1,106 +1,28 @@
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import CountVectorizer
-
-def forms(s):
-    s = str(s).lower()
-    res = []
-    if s[-1]=='а':  # 1 склонение
-        res.append(s)  # И
-        res.append(s[:-1]+'ы')  # Р
-        res.append(s[:-1]+'е')  # Д
-        res.append(s[:-1]+'у')  # В
-        res.append(s[:-1]+'ой')  # Т
-        res.append(s[:-1]+'е')  # П
-    if s[-1]=='я':  # 1 склонение
-        res.append(s)  # И
-        res.append(s[:-1]+'и')  # Р
-        res.append(s[:-1]+'е')  # Д
-        res.append(s[:-1]+'ю')  # В
-        res.append(s[:-1]+'ей')  # Т
-        res.append(s[:-1]+'е')  # П
-    elif s[-1]=='о':  # 2 склонение (с окончанием)
-        res.append(s)  # И
-        res.append(s[:-1]+'а')  # Р
-        res.append(s[:-1]+'у')  # Д
-        res.append(s)  # В
-        res.append(s[:-1]+'ом')  # Т
-        res.append(s[:-1]+'е')  # П
-    elif s[-1]=='е':  # 2 склонение (с окончанием)
-        res.append(s)  # И
-        res.append(s[:-1]+'я')  # Р
-        res.append(s[:-1]+'ю')  # Д
-        res.append(s)  # В
-        res.append(s[:-1]+'ем')  # Т
-        res.append(s[:-1]+'и')  # П
-    elif s[-1]=='ь':  # 3 склонение
-        res.append(s)  # И
-        res.append(s[:-1]+'и')  # Р
-        res.append(s[:-1]+'и')  # Д
-        res.append(s[:-1]+'и')  # В
-        res.append(s[:-1]+'ью')  # Т
-        res.append(s[:-1]+'и')  # П
-    else:
-        res.append(s)
-    return list(set(res))
-
-def category_percent(token_vocabulary):
-    # создаем базу тег - професиия
-
-    blacklist = [
-             'подписаться',
-             'подписка',
-             'публиковать',
-             'мир',
-             'город',
-             'жизнь',
-             'любить',
-             'любитель',
-             'друг',
-             'имя',
-             'момент',
-             #'душа',
-             'новость',
-             'день',
-             'метр',
-             'новое',
-             'мем',
-             'мема',
-             'прикол',
-             'место',
-             'факт',
-             'курс',
-             'вектор',
-             'рот',
-             'год',
-             'арт',
-             'комикс',
-             'секрет',
-             'вопрос',
-             'москва',
-             'множество',
-             'прохождение',
-             'начинаться'
-]
-
-    
-    professions_category_tokens = {
+{
     "Сфера обслуживания": [
+        "агрегатор",
         "меню",
         "пирог",
         "отель",
+        "заказывать",
         "администратор",
         "сауна",
         "официант",
         "распродажа",
         "консультант",
         "предоплата",
+        "татуаж",
         "прайс",
+        "хозтовары",
+        "курорт",
         "расценка",
         "кошелёк",
+        "барбер",
         "борода",
         "боулинг",
         "плата",
         "стажер",
+        "автозапчасть",
         "маникюр",
         "визажист",
         "педикюр",
@@ -111,12 +33,17 @@ def category_percent(token_vocabulary):
         "абонемент",
         "парикмахер",
         "массаж",
+        "сок",
         "барбершоп",
         "заказ",
+        "цветовод",
         "самовывоз",
+        "причёска",
         "сервис",
         "остаться",
+        "окрашивание",
         "паста",
+        "мужскиестрижка",
         "оплата",
         "пекарня",
         "эпиляция",
@@ -143,15 +70,7 @@ def category_percent(token_vocabulary):
         "президент",
         "население",
         "лига",
-        "мид",
-        "партия",
-        "политика",
-        "власть",
-        "народ",
-        "закон",
-        "война",
-        "сирия",
-        "права"
+        "мид"
     ],
     "Медицина": [
         "лечить",
@@ -163,7 +82,6 @@ def category_percent(token_vocabulary):
         "грыж",
         "грыжа",
         "врач",
-        "молодая",
         "оздоравливать",
         "зрение",
         "дефектолог",
@@ -173,23 +91,7 @@ def category_percent(token_vocabulary):
         "аборт",
         "роды",
         "логопед",
-        "поликлиника",
-        "лекарство",
-        "больница",
-        "пациент",
-        "симптомы",
-        "состояние",
-        "болезнь",
-        "терапия",
-        "анамнез",
-        "болезни",
-        "история",
-        "лекарства",
-        "аптека",
-        "иньекции",
-        "таблетки",
-        "уколы",
-        "препараты"
+        "поликлиника"
     ],
     "Домоводство": [
         "сарафан",
@@ -220,22 +122,26 @@ def category_percent(token_vocabulary):
         "форум",
         "робототехника",
         "техника",
+        "тильда",
         "интернет",
         "перезагрузка",
         "робот",
         "сайт",
-        "видеоигра",
-        "технология",
         "информация",
+        "статистика",
         "разработчик",
+        "проект",
         "код",
         "программа",
         "система",
         "разработка",
         "данные",
+        "информация",
         "приложение",
         "сервер",
-        "разработка"
+        "программист",
+        "фотошоп",
+        "разработка",
     ],
     "Кино и тв": [
         "кинокритик",
@@ -245,20 +151,12 @@ def category_percent(token_vocabulary):
         "видеоматериал",
         "кинотеатр",
         "кадр",
-        "сми",
-        "выглядеть",
         "киномания",
         "телеканал",
         "фильм",
-        "Картина",
-        "Кинокартина",
-        "Кинолента",
-        "Кинофильм",
-        "Режиссер",
-        "Кинорежиссер-постановщик",
         "кинофестиваль",
         "кинокомпозитор",
-        "кинорежиссёр"
+        "кинорежиссёр",
     ],
     "Театр": [
         "пьеса",
@@ -282,19 +180,20 @@ def category_percent(token_vocabulary):
         "творчество",
         "картина",
         "художник",
-        "эстетик",
         "культура",
         "репродукция",
         "абсурд",
         "композитор",
+        "чувство",
         "роман",
         "актёр",
+        "рамадан",
         "пейзаж",
         "коллокация",
-        "эрмитаж",
-        "сфера", 
-        "душа",
+        "эрмитажа",
+        "сфера",
         "фотосессия",
+        "среда",
         "искусство",
         "фотоколлаж",
         "фотограф",
@@ -307,7 +206,11 @@ def category_percent(token_vocabulary):
         "категория",
         "фотокамера",
         "портрет",
+        "данс",
+        "романтик",
         "музей",
+        "кастанеда",
+        "художня",
         
     ],
     "Спорт": [
@@ -327,9 +230,6 @@ def category_percent(token_vocabulary):
         "стадион",
         "кроссфита",
         "ставка",
-        "реал",
-        "мадрид",
-        "челси",
         "чемпион",
         "спортзал",
         "хореография",
@@ -340,28 +240,30 @@ def category_percent(token_vocabulary):
     "Литература и тексты": [
         "газета",
         "юлий",
-        "юмор",
         "литература",
         "типография",
         "опубликовываться",
         "редактор",
         "книжка",
+        "притча",
         "лексика",
+        "цитата",
         "опубликовать",
         "псевдоним",
         "персонаж",
         "авторство",
+        "душа",
         "строчка",
         "перо",
-        "поэзия",
         "маркс",
         "сюжет",
-        "'эстетика'",
         "литрес",
         "дискутировать",
         "лермонтов",
+        "ваджр",
         "журналист",
         "гоголь",
+        "опечатка",
         "писание",
         "опубликоваться",
         "ангел",
@@ -375,20 +277,14 @@ def category_percent(token_vocabulary):
         "книга",
         "грамматика",
         "говорение",
-        "счастье",
         "логика",
         "средневековье",
         "история",
-        "клуб",
-        "реклама",
-        "уровень",
         "совершенствоваться",
         "психоанализ",
         "англ",
         "эрудит",
         "язык",
-        "общество",
-        "сообщество",
         "китаец"
     ],
     "Полиция": [
@@ -406,12 +302,7 @@ def category_percent(token_vocabulary):
         "наружное",
         "юстиция",
         "служба",
-        "ограбление",
-        "Долг",
-        "нарушитель",
-        "закон",
-        "правонарушение",
-        "правопорядок"
+        "ограбление"
     ],
     "Работа в офисе": [
         "вопрос",
@@ -432,27 +323,22 @@ def category_percent(token_vocabulary):
     ],
     "Естественные и технические науки": [
         "ломоносов",
-        "алхимия",
-        "минерал",
-        "природа",
-        "вуз",
         "вселенная",
         "наука",
         "химик",
+        "спектр",
+        "дерево",
         "исследование",
         "теория",
         "технология",
+        "арифметик",
         "математика",
+        "архитектура",
         "грант",
         "читатель",
         "публиковать",
         "мероприятие",
-        "Орнитолог",
-        "Почвовед",
-        "социолог",
-        "физика",
-        "Учёный",
-        "Химик",
+        "химия",
         "наука",
         "исследование",
         "данные",
@@ -465,6 +351,8 @@ def category_percent(token_vocabulary):
         "лаборатория",
         "технарь",
         "инженер",
+        "отдел",
+        "элемент",
         "соединение",
         "методика",
         "раствор",
@@ -512,10 +400,6 @@ def category_percent(token_vocabulary):
         "педагог",
         "академия",
         "егэ",
-        "группа",
-        "вуз",
-        "итмо",
-        "мгу",
         "ученик",
         "учитель",
         "предмет",
@@ -581,126 +465,9 @@ def category_percent(token_vocabulary):
         "студсоюз",
         "сообщество",
         "конференция",
-        "пост",
         "беседа",
-        "поток",
-        "общение",
         "пост",
-        "чат",
         "паблик",
         "помощь"
     ]
 }
-
-    
-    #res_data.json -> professions_category_tokens
-    
-    X = []  # тег
-    Y = []  # профессия
-    for proff, tag in professions_category_tokens.items():
-        X += tag
-        for i in range(len(tag)):
-            Y.append(proff)
-    
-    # создаем базу падежи и теги профессии - профессия
-    Xp = []
-    Yp = []
-    for i in range(len(X)) :
-        f = forms(X[i])
-        Xp += f
-        Yp += [Y[i]] * len(f)
-        
-    #print(len(Xp),len(Yp))
-    
-    vectorizer = CountVectorizer()  # векторизируем текст Xp
-    Xp = vectorizer.fit_transform(Xp)
-    
-    clf = LogisticRegression()  # обучаем нейросеть
-    clf.fit(Xp,Yp)
-    
-    # сортируем пары ключ - значение по максимальному значению
-    keys = []  
-    values = []
-    for key, value in token_vocabulary.items():
-        keys.append(key)
-        values.append(int(value*100))
-    values_sorted = sorted(values, reverse=True)
-    
-      
-    sum_values = 0
-    keys_sorted = []
-    values_sorted_persent = []
-    for i in range(len(values_sorted)):
-        sum_values += values_sorted[i]
-        keys_sorted.append(keys[values.index(values_sorted[i])])
-    for i in range(len(values_sorted)):
-        values_sorted_persent.append (int(values_sorted[i] * 10000/sum_values))
-
-
-    for i in keys_sorted:
-      while i in blacklist:
-        if i in keys_sorted:
-          ind = keys_sorted.index(i)
-          values_sorted.remove(values_sorted[ind])
-          #keys_sorted.pop(keys_sorted.index(i))
-          keys_sorted.remove(i)
-        else:
-          break
-
-    print(keys_sorted)
-    print(values_sorted)
-
-    keys_sorted_searched = []  # в эту переменную кладутся профессии от нейронки
-    for i in range(len(keys_sorted)):
-        s = keys_sorted[i]
-        s = (s.lower().split())
-        s = vectorizer.transform(s).toarray()
-        keys_sorted_searched.append(clf.predict(s)[0])
-
-    # так получается, что в keys_sorted_searched values_sorted_persent 
-    # могут быть отдельные значения одинаковых профессий, надо сложить
-    dict_i = {}
-    for i in range(len(keys_sorted_searched)):
-        if not(keys_sorted_searched[i] in dict_i.keys()):
-            dict_i.update({keys_sorted_searched[i] : values_sorted_persent[i]})
-        else:
-            dict_i.update({keys_sorted_searched[i] : dict_i[keys_sorted_searched[i]] + values_sorted_persent[i]})
-    
-    # корректировка значений
-    undo_service = 1 #0.65
-    undo_culture = 1 #1.20
-    undo_natscience = 0.22
-    undo_humscience = 2.2
-    undo_it = 1.4
-    
-    for key, value in dict_i.items():
-        if key == 'Сфера бслуживания':
-            dict_i.update({key : int(dict_i[key] * undo_service)})
-        if key == 'Литература и тексты' or key == 'Искусство и культура':
-            dict_i.update({key : int(dict_i[key] * undo_culture)})
-        if key == 'Естественные и технические науки':
-            dict_i.update({key : int(dict_i[key] * undo_natscience)})
-        if key == 'Гуманитарные науки': 
-            dict_i.update({key : int(dict_i[key] * undo_humscience)})
-        if key == 'IT': 
-            dict_i.update({key : int(dict_i[key] * undo_it)})
-            
-    dict_sorted = {}
-    keys_i = []
-    values_i = []
-    for key, value in dict_i.items():
-        keys_i.append(key)
-        values_i.append(value)
-    values_i_sorted = sorted(values_i, reverse=True)
-    keys_i_sorted = []
-    
-    sum_i = 0
-    for i in range(len(values_i)):
-        keys_i_sorted.append(keys_i[values_i.index(values_i_sorted[i])])
-        sum_i += values_i_sorted[i]
-    print(keys_i)
-    print(values_i)
-    for i in range(len(keys_i_sorted)):
-        dict_sorted.update({keys_i_sorted[i] : int(values_i_sorted[i] * 100 / sum_i)})
-    
-    return dict_sorted
